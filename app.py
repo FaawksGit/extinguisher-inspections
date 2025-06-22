@@ -25,11 +25,6 @@ class Inspection(db.Model):
     notes = db.Column(db.Text)
     type = db.Column(db.String(50))
 
-# Create tables when app first starts (safe for production)
-@app.before_first_request
-def create_tables():
-    db.create_all()
-
 # Show form + inspections
 @app.route('/')
 def index():
@@ -86,6 +81,10 @@ def format_date(value):
         return date.fromisoformat(value).strftime('%d-%m-%y')
     except Exception:
         return value
+
+# Create tables on startup (for Flask 3+)
+with app.app_context():
+    db.create_all()
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8080)
