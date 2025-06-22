@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Fire Extinguisher Checks</title>
+    <style>
+        body {
+            font-family: "Segoe UI", Arial, sans-serif;
+            margin: 2em;
+            background-color: #f9f9f9;
+            color: #333;
+        }
+
+        h1, h2 {
+            color: #2c3e50;
+        }
+
+        form {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            padding: 1.5em;
+            border-radius: 6px;
+            max-width: 600px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+            margin-bottom: 2em;
+        }
+
+        label {
+            display: inline-block;
+            width: 140px;
+            margin-bottom: 0.4em;
+            font-weight: bold;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        input[type="date"],
+        select,
+        textarea {
+            width: 250px;
+            padding: 0.5em;
+            margin-bottom: 1em;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 1em;
+            box-sizing: border-box;
+        }
+
+        textarea.wide-notes {
+            width: 400px;
+            height: 80px;
+        }
+
+        button {
+            background-color: #2d89ef;
+            color: white;
+            border: none;
+            padding: 0.6em 1.2em;
+            border-radius: 4px;
+            font-size: 1em;
+            cursor: pointer;
+            margin-top: 0.5em;
+        }
+
+        button:hover {
+            background-color: #1b65c1;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: #fff;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            margin-top: 1.5em;
+        }
+        
+        table form {
+            margin: 0;
+            display: inline;
+        }
+        table td form {
+            display: inline;
+            padding: 0;
+            margin: 0;
+            border: none;
+            background: none;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+            font-size: 0.95em;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        form[action="/"] {
+            display: flex;
+            align-items: center;
+            gap: 1em;
+            flex-wrap: wrap;
+        }
+
+        select[name="sort_by"],
+        input[name="filter_unit_no"] {
+            width: auto;
+        }
+
+        .button-clear {
+            background-color: #999;
+        }
+
+        .button-clear:hover {
+            background-color: #777;
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1em;
+            flex-wrap: wrap;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 1.8em;
+            flex: 1;
+        }
+
+        .logo {
+            height: 200px;
+            width: auto;
+            max-width: 100%;
+            margin-left: 1em;
+        }
+
+        @media (max-width: 600px) {
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .logo {
+                margin-top: 0.5em;
+                height: 40px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Fire Extinguisher Inspection Log</h1>
+        <img src="https://candl.org/wp-content/uploads/2018/02/candl-logo-social-default.jpg" alt="Logo" class="logo">
+    </div>
+
+    <form method="POST" action="/add">
+        <label>Date:</label><br>
+        <input type="date" name="date" value="{{ today }}" required><br>
+
+        <label>Location:</label><br>
+        <select name="location" required>
+            <option value="MELB">MELB</option>
+            <option value="AVV">AVV</option>
+            <option value="MOOR">MOOR</option>
+        </select><br>
+
+        <label>Unit No.:</label><br>
+        <input type="number" name="unit_no" required><br>
+
+        <label>Serial No.:</label><br>
+        <input type="text" name="serial_no"><br>
+
+        <label>Manufacture Date:</label><br>
+        <input type="date" name="manufacture_date"><br>
+
+        <label>Condition:</label><br>
+        <select name="condition" required>
+            <option value="Good">Good</option>
+            <option value="Needs Maintenance">Needs Maintenance</option>
+            <option value="Damaged">Damaged</option>
+        </select><br>
+
+        <label>Inspector Name:</label><br>
+        <select name="inspector" required>
+            <option value="Darren Basso">Darren Basso</option>
+            <option value="James Ryan">James Ryan</option>
+        </select><br>
+		
+		<label>Type:</label><br>
+		<select name="type" required>
+			<option value="BE">BE</option>
+			<option value="ABE">ABE</option>
+			<option value="Water">Water</option>
+			<option value="Other">Other</option>
+		</select><br>
+		
+		<label>Weight (kg):</label><br>
+		<input type="number" step="0.1" name="weight"><br>
+		
+		<label>Notes:</label><br>
+        <textarea name="notes" class="wide-notes" rows="5"></textarea><br>
+
+        <button type="submit">Add Inspection</button>
+    </form>
+
+<h2>Inspection History</h2>
+
+    <form method="get" action="/" style="background-color: #fff; border: 1px solid #ddd; padding: 1em; border-radius: 6px; margin-bottom: 1.5em; display: flex; flex-wrap: wrap; gap: 1em; align-items: center;">
+        <div style="flex: 1 1 100%;">
+            <label for="filter_unit_no">Unit No.:</label>
+            <input type="text" id="filter_unit_no" name="filter_unit_no" value="{{ request.args.get('filter_unit_no', '') }}">
+        </div>
+
+        <div style="flex: 1 1 100%;">
+            <label for="sort_by">Sort by:</label>
+            <select name="sort_by" id="sort_by" onchange="this.form.submit()">
+                <option value="date_desc" {% if sort_by == 'date_desc' %}selected{% endif %}>Date (newest first)</option>
+                <option value="date_asc" {% if sort_by == 'date_asc' %}selected{% endif %}>Date (oldest first)</option>
+                <option value="unit_no_asc" {% if sort_by == 'unit_no_asc' %}selected{% endif %}>Unit No.</option>
+            </select>
+        </div>
+
+        <button type="submit">Apply</button>
+        <button type="button" class="button-clear" onclick="window.location='/'">Clear</button>
+    </form>
+
+
+<table>
+    <tr>
+        <th>Date</th>
+        <th>Location</th>
+        <th>Unit No.</th>
+        <th>Serial No.</th>
+        <th>Manufacture Date</th>
+        <th>Condition</th>
+        <th>Type</th>
+        <th>Inspector</th>
+        <th>Weight (kg)</th>
+        <th>Notes</th>
+		<th>Actions</th>
+    </tr>
+    {% for check in inspections %}
+    <tr>
+        <td>{{ check.date | format_date }}</td>
+        <td>{{ check.location }}</td>
+        <td>{{ check.unit_no }}</td>
+        <td>{{ check.serial_no }}</td>
+        <td>{{ check.manufacture_date }}</td>
+        <td>{{ check.condition }}</td>
+        <td>{{ check.type }}</td>
+        <td>{{ check.inspector }}</td>
+        <td>{{ check.weight }}</td>
+        <td>{{ check.notes }}</td>
+        <td>
+            <form method="POST" action="/delete/{{ loop.index0 }}">
+                <button type="submit" onclick="return confirm('Delete this entry?');">Delete</button>
+            </form>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+
+</body>
+</html>

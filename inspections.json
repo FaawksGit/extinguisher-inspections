@@ -1,0 +1,26 @@
+[
+    {
+        "date": "2025-06-17",
+        "location": "MELB",
+        "unit_no": "412",
+        "serial_no": "123456",
+        "manufacture_date": "1980-12-11",
+        "condition": "Good",
+        "inspector": "Darren Basso",
+        "weight": "9",
+        "notes": "sdsdfgdfgsdfg",
+        "type": "BE"
+    },
+    {
+        "date": "2025-06-17",
+        "location": "MELB",
+        "unit_no": "233",
+        "serial_no": "567123",
+        "manufacture_date": "",
+        "condition": "Needs Maintenance",
+        "inspector": "Darren Basso",
+        "weight": "9",
+        "notes": "News",
+        "type": "BE"
+    }
+]
